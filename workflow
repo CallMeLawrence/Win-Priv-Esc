@@ -1,5 +1,6 @@
 #### WMIC ENUM ####
-# wmic to enum the local or remote neighbor machine
+# wmic to enum the remote machine
+## NOTE: if you want to enum local, do not use the /node, /user, or /password
 # Execute wmic.exe on the target machine by using the provided credentials or found; check the operating system information.
 Command:  wmic /node:10.0.10.12 /user:administrator /password:password123! os list brief
 
